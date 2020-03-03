@@ -1,4 +1,3 @@
-import numpy
 
 print("Choose a word size of: 16, 24, 32, 48 of 64")
 listWordSize = [16, 24, 32, 48, 64]
@@ -34,7 +33,7 @@ else:
 listKeyWords = [2, 3, 4]
 while KeyWordsLoop:
     try:
-        numberOfKeyWords = int(input("Word size = "))
+        numberOfKeyWords = int(input("Amount of keys = "))
         if numberOfKeyWords not in listKeyWords:
             raise ValueError
         elif (wordSize == 24 or wordSize == 32) and numberOfKeyWords == 2:
@@ -46,41 +45,32 @@ while KeyWordsLoop:
         print("This is not a correct number")
 
 if wordSize == 16:
-    numberOfRoundsLoop = False
     numberOfRounds = 22
-else:
-    numberOfRoundsLoop = True
-    print("Choose the number of rounds based on the word size.")
-    print("if the word size is 24, then the amount of rounds is either 22 or 23.")
-    print("if the word size is 32, then the amount of rounds is either 26 or 27.")
-    print("if the word size is 48, then the amount of rounds is either 28 or 29.")
-    print("if the word size is 64, then the amount of rounds is either 32, 33 or 34.")
-
-listRounds = [22, 23, 26, 27, 28, 29, 32, 33, 34]
-while numberOfRoundsLoop:
-    try:
-        numberOfRounds = int(input("Number of rounds = "))
-        if numberOfRounds not in listRounds:
-            raise ValueError
-        elif wordSize == 24 and not (numberOfRounds == 22 or numberOfRounds == 23):
-            raise ValueError
-        elif wordSize == 32 and not (numberOfRounds == 26 or numberOfRounds == 27):
-            raise ValueError
-        elif wordSize == 48 and not (numberOfRounds == 28 or numberOfRounds == 29):
-            raise ValueError
-        elif wordSize == 64 and not (numberOfRounds == 32 or numberOfRounds == 33 or numberOfRounds == 34):
-            raise ValueError
-        numberOfRoundsLoop = False
-    except ValueError:
-        print("This is not a correct number")
-
-print("the word size is " + str(wordSize) + ", the amount of keys is " + str(numberOfKeyWords) + " and the number of rounds is " + str(numberOfRounds))
+elif wordSize == 24 and numberOfKeyWords == 3:
+    numberOfRounds = 22
+elif wordSize == 24 and numberOfKeyWords == 4:
+    numberOfRounds = 23
+elif wordSize == 32 and numberOfKeyWords == 3:
+    numberOfRounds = 26
+elif wordSize == 32 and numberOfKeyWords == 4:
+    numberOfRounds = 27
+elif wordSize == 48 and numberOfKeyWords == 1:
+    numberOfRounds = 28
+elif wordSize == 48 and numberOfKeyWords == 3:
+    numberOfRounds = 29
+elif wordSize == 64 and numberOfKeyWords == 2:
+    numberOfRounds = 32
+elif wordSize == 64 and numberOfKeyWords == 3:
+    numberOfRounds = 33
+elif wordSize == 64 and numberOfKeyWords == 4:
+    numberOfRounds = 34
 
 encryptWord1 = 0
 unencryptedWord1 = 0
 encryptWord2 = 0
 unencryptedWord2 = 0
 input1Loop = True
+
 while input1Loop:
     try:
         input1 = input("Enter your first hexadecimal number to be encrypted = ")
@@ -116,21 +106,34 @@ for i in range(numberOfKeyWords):  # for lus van 0 tot numberOfKeyWords-1
         except ValueError:
             print("This is not a hexadecimal number")
 
-for i in range(numberOfRounds-2):  # source: https://eprint.iacr.org/2013/404.pdf page 20
-    Key2shiftRight = numpy.right_shift(keyList2[i], shiftRightAmount)
-    Key2plusKey1 = (Key2shiftRight + keyList1[i]) % wordSize
+
+def leftRotate(num, amount):
+    value = (num << amount) | (num >> (wordSize - amount))
+    valueMod = value % (2 ** wordSize)
+    return valueMod
+
+
+def rightRotate(num, amount):
+    value = (num >> amount) | (num << (wordSize - amount))
+    valueMod = value % (2 ** wordSize)
+    return valueMod
+
+
+for i in range(numberOfRounds - 2):  # source: https://eprint.iacr.org/2013/404.pdf page 20
+    Key2shiftRight = rightRotate(keyList2[i], shiftRightAmount)
+    Key2plusKey1 = (Key2shiftRight + keyList1[i]) % (2 ** wordSize)
     Key2Final = Key2plusKey1 ^ i
     keyList2.append(Key2Final)
-    Key1shiftLeft = numpy.left_shift(keyList1[i], shiftLeftAmount)
+    Key1shiftLeft = leftRotate(keyList1[i], shiftLeftAmount)
     Key1Final = Key1shiftLeft ^ Key2Final
     keyList1.append(Key1Final)
 
-for i in range(numberOfRounds-1):  # source: https://eprint.iacr.org/2013/404.pdf page 20
-    encryptWord1ShiftRight = numpy.right_shift(encryptWord1, shiftRightAmount)
-    encryptWord1plusEncryptWord2 = (encryptWord1ShiftRight + encryptWord2) % wordSize
+for i in range(numberOfRounds - 1):  # source: https://eprint.iacr.org/2013/404.pdf page 20
+    encryptWord1ShiftRight = rightRotate(encryptWord1, shiftRightAmount)
+    encryptWord1plusEncryptWord2 = (encryptWord1ShiftRight + encryptWord2) % (2 ** wordSize)
     encryptWord1 = encryptWord1plusEncryptWord2 ^ keyList1[i]
-    encryptWord2ShiftLeft = numpy.left_shift(encryptWord2, shiftLeftAmount)
+    encryptWord2ShiftLeft = leftRotate(encryptWord2, shiftLeftAmount)
     encryptWord2 = encryptWord2ShiftLeft ^ encryptWord1
 
-
-print("The word " + str(hex(unencryptedWord1)) + " got encrypted to " + str(hex(encryptWord1)) + " and the word " + str(hex(unencryptedWord2)) + " got encrypted to " + str(hex(encryptWord2)))
+print("The word " + str(hex(unencryptedWord1)) + " got encrypted to " + str(hex(encryptWord1)) + " and the word " + str(
+    hex(unencryptedWord2)) + " got encrypted to " + str(hex(encryptWord2)))
