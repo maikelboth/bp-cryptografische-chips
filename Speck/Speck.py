@@ -1,139 +1,98 @@
+class BP_Speck:
+    # Valid setups for the Speck cipher, format = block_size: {key_size: rounds}
+    # Source: https://en.wikipedia.org/wiki/Speck_(cipher)
+    __valid_setups = {32: {64: 22},
+                      48: {72: 22, 96: 23},
+                      64: {96: 26, 128: 27},
+                      96: {96: 28, 144: 29},
+                      128: {128: 32, 192: 33, 256: 34}}
 
-print("Choose a word size of: 16, 24, 32, 48 of 64")
-listWordSize = [16, 24, 32, 48, 64]
-wordSizeLoop = True
-wordSize = 0
-numberOfKeyWords = 0
-numberOfRounds = 0
-shiftLeftAmount = 0
-shiftRightAmount = 0
-while wordSizeLoop:
-    try:
-        wordSize = int(input("Word size = "))
-        if wordSize not in listWordSize:
-            raise ValueError
-        wordSizeLoop = False
-    except ValueError:
-        print("This number is not one of the options")
-
-if wordSize == 16:
-    KeyWordsLoop = False
-    numberOfKeyWords = 4
-    shiftLeftAmount = 2
-    shiftRightAmount = 7
-else:
-    KeyWordsLoop = True
-    shiftLeftAmount = 3
-    shiftRightAmount = 8
-    print("Choose the number of key words based on the word size.")
-    print("if the word size is 24 or 32, then the amount of keys is either 3 or 4.")
-    print("if the word size is 48, then the amount of keys is either 2 or 3.")
-    print("if the word size is 64, then the amount of keys is either 2, 3 or 4.")
-
-listKeyWords = [2, 3, 4]
-while KeyWordsLoop:
-    try:
-        numberOfKeyWords = int(input("Amount of keys = "))
-        if numberOfKeyWords not in listKeyWords:
-            raise ValueError
-        elif (wordSize == 24 or wordSize == 32) and numberOfKeyWords == 2:
-            raise ValueError
-        elif wordSize == 48 and numberOfKeyWords == 4:
-            raise ValueError
-        KeyWordsLoop = False
-    except ValueError:
-        print("This is not a correct number")
-
-if wordSize == 16:
-    numberOfRounds = 22
-elif wordSize == 24 and numberOfKeyWords == 3:
-    numberOfRounds = 22
-elif wordSize == 24 and numberOfKeyWords == 4:
-    numberOfRounds = 23
-elif wordSize == 32 and numberOfKeyWords == 3:
-    numberOfRounds = 26
-elif wordSize == 32 and numberOfKeyWords == 4:
-    numberOfRounds = 27
-elif wordSize == 48 and numberOfKeyWords == 1:
-    numberOfRounds = 28
-elif wordSize == 48 and numberOfKeyWords == 3:
-    numberOfRounds = 29
-elif wordSize == 64 and numberOfKeyWords == 2:
-    numberOfRounds = 32
-elif wordSize == 64 and numberOfKeyWords == 3:
-    numberOfRounds = 33
-elif wordSize == 64 and numberOfKeyWords == 4:
-    numberOfRounds = 34
-
-encryptWord1 = 0
-unencryptedWord1 = 0
-encryptWord2 = 0
-unencryptedWord2 = 0
-input1Loop = True
-
-while input1Loop:
-    try:
-        input1 = input("Enter your first hexadecimal number to be encrypted = ")
-        encryptWord1 = int(input1, 16)
-        unencryptedWord1 = encryptWord1
-        input1Loop = False
-    except ValueError:
-        print("This is not a hexadecimal number")
-
-input2Loop = True
-while input2Loop:
-    try:
-        input2 = input("Enter your second hexadecimal number to be encrypted = ")
-        encryptWord2 = int(input2, 16)
-        unencryptedWord2 = encryptWord2
-        input2Loop = False
-    except ValueError:
-        print("This is not a hexadecimal number")
-
-keyList1 = []
-keyList2 = []
-for i in range(numberOfKeyWords):  # for lus van 0 tot numberOfKeyWords-1
-    KeyLoop = True
-    while KeyLoop:
+    def __init__(self, key, key_size, block_size, register_pos=0):
         try:
-            inputKey = input("Enter a hexadecimal number as your key = ")
-            hexadecimalKey = int(inputKey, 16)
-            KeyLoop = False
-            if i == 0:
-                keyList1.append(hexadecimalKey)
-            else:
-                keyList2.append(hexadecimalKey)
-        except ValueError:
-            print("This is not a hexadecimal number")
+            self.key = key & ((2 ** key_size) - 1)
+            self.key_size = key_size
+            self.block_size = block_size
+            self.register_pos = register_pos
+            self.word_size = block_size >> 1
+            self.rounds = self.__valid_setups[block_size][key_size]
+        except KeyError:
+            print("Invalid key size and block size combination!")
+        except (ValueError, TypeError):
+            print("Invalid key value!")
+
+        self.register_values = []
+
+        if self.word_size == 16:
+            self.shift_left_amount = 2
+            self.shift_right_amount = 7
+        else:
+            self.shift_left_amount = 3
+            self.shift_right_amount = 8
+
+        self.number_of_keywords = self.key_size // self.word_size
+        self.key_list_1 = [self.key & ((2 ** self.word_size) - 1)]
+        self.key_list_2 = []
+        for i in range(1, self.number_of_keywords):
+            self.key_list_2.append((self.key >> (i * self.word_size)) & ((2 ** self.word_size) - 1))
+
+        # Generate key list
+        # Source: https://eprint.iacr.org/2013/404.pdf page 20
+        for i in range(self.rounds - 1):
+            key_2_shift_right = self._right_rotate(self.key_list_2[i], self.shift_right_amount)
+            key_2_plus_key_1 = (key_2_shift_right + self.key_list_1[i]) & ((2 ** self.word_size) - 1)
+            key_2_final = key_2_plus_key_1 ^ i
+            self.key_list_2.append(key_2_final)
+            key_1_shift_left = self._left_rotate(self.key_list_1[i], self.shift_left_amount)
+            key_1_final = key_1_shift_left ^ key_2_final
+            self.key_list_1.append(key_1_final)
+
+    def _right_rotate(self, number, amount):
+        return (number >> amount) & ((2 ** self.word_size) - 1)
+
+    def _left_rotate(self, number, amount):
+        return (number << amount) & ((2 ** self.word_size) - 1)
+
+    def get_register_values(self):
+        return self.register_values
+
+    def encrypt(self, plaintext):
+        # Empty earlier register values
+        self.register_values = []
+
+        try:
+            encrypt_word_1 = (plaintext >> self.word_size) & ((2 ** self.word_size) - 1)
+            encrypt_word_2 = plaintext & ((2 ** self.word_size) - 1)
+        except TypeError:
+            print("Invalid plaintext value!")
+            raise
+
+        for i in range(self.rounds):
+            encrypt_word_1_shift_right = self._right_rotate(encrypt_word_1, self.shift_right_amount)
+            encrypt_word_1_plus_encrypt_word_2 = (encrypt_word_1_shift_right + encrypt_word_2) & ((2 ** self.word_size) - 1)
+            encrypt_word_1 = encrypt_word_1_plus_encrypt_word_2 ^ self.key_list_1[i]
+            encrypt_word_2_shift_left = self._left_rotate(encrypt_word_2, self.shift_left_amount)
+            encrypt_word_2 = encrypt_word_2_shift_left ^ encrypt_word_1
+
+            registers = {0: encrypt_word_1_shift_right,
+                         1: encrypt_word_1_plus_encrypt_word_2,
+                         2: encrypt_word_1,
+                         3: encrypt_word_2_shift_left,
+                         4: encrypt_word_2}
+            self.register_values.append(registers.get(self.register_pos, -1))
+
+        ciphertext = (encrypt_word_1 << self.word_size) + encrypt_word_2
+        return ciphertext
 
 
-def leftRotate(num, amount):
-    value = (num << amount) | (num >> (wordSize - amount))
-    valueMod = value % (2 ** wordSize)
-    return valueMod
+block_size = 128
+key_size = 128
+plaintext = 0x6c617669757165207469206564616d20
+key = 0x0f0e0d0c0b0a09080706050403020100
 
+cipher = BP_Speck(key, key_size, block_size, 4)
 
-def rightRotate(num, amount):
-    value = (num >> amount) | (num << (wordSize - amount))
-    valueMod = value % (2 ** wordSize)
-    return valueMod
-
-
-for i in range(numberOfRounds - 2):  # source: https://eprint.iacr.org/2013/404.pdf page 20
-    Key2shiftRight = rightRotate(keyList2[i], shiftRightAmount)
-    Key2plusKey1 = (Key2shiftRight + keyList1[i]) % (2 ** wordSize)
-    Key2Final = Key2plusKey1 ^ i
-    keyList2.append(Key2Final)
-    Key1shiftLeft = leftRotate(keyList1[i], shiftLeftAmount)
-    Key1Final = Key1shiftLeft ^ Key2Final
-    keyList1.append(Key1Final)
-
-for i in range(numberOfRounds - 1):  # source: https://eprint.iacr.org/2013/404.pdf page 20
-    encryptWord1ShiftRight = rightRotate(encryptWord1, shiftRightAmount)
-    encryptWord1plusEncryptWord2 = (encryptWord1ShiftRight + encryptWord2) % (2 ** wordSize)
-    encryptWord1 = encryptWord1plusEncryptWord2 ^ keyList1[i]
-    encryptWord2ShiftLeft = leftRotate(encryptWord2, shiftLeftAmount)
-    encryptWord2 = encryptWord2ShiftLeft ^ encryptWord1
-
-print("The word " + str(hex(unencryptedWord1)) + " got encrypted to " + str(hex(encryptWord1)) + " and the word " + str(
-    hex(unencryptedWord2)) + " got encrypted to " + str(hex(encryptWord2)))
+ciphertext = cipher.encrypt(plaintext)
+print("key: " + hex(cipher.key))
+print("PT: " + hex(plaintext))
+print("CT: " + hex(ciphertext))
+print("Register values: " + str(cipher.get_register_values()).strip('[]'))
