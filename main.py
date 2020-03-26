@@ -3,6 +3,8 @@ import argparse
 
 def main(options):
 	print("doing stuff with options bla: " + options.bla + " and blie: " + options.blie)
+	# from Speck/src/Speck import BP_Speck
+	# do your thing here, with provided cmdline options
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
