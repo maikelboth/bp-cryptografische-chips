@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from src.Speck import BP_Speck
 
+
 class TestBPSpeck(TestCase):
 
 	def setUp(self):
@@ -30,3 +31,6 @@ class TestBPSpeck(TestCase):
 		self.assertEqual("0xf0e0d0c0b0a09080706050403020100", hex(cipher.key))
 		self.assertEqual("0x6c617669757165207469206564616d20", hex(self.plaintext))
 		self.assertEqual("0xa65d9851797832657860fedf5c570d18", hex(ciphertext))
+
+	if __name__ == '__main__':
+		unittest.main()
