@@ -1,6 +1,7 @@
 
 import argparse
 from Speck.src.Speck import BP_Speck
+from Speck.src.Math import BP_Math
 
 
 def main(options):
@@ -8,6 +9,13 @@ def main(options):
 	ciphertext = cipher.encrypt(int(options.plaintext, 0))
 	print("Using key: " + options.key + " to encrypt plaintext: " + options.plaintext)
 	print("Ciphertext result: " + hex(ciphertext))
+
+	math = BP_Math(cipher.register_values, options.blocksize)
+	hamming_distance = math.get_hamming_distance()
+	print("Hamming distance: " + str(hamming_distance))
+
+	hamming_weight = math.get_hamming_weight()
+	print("Hamming weight: " + str(hamming_weight))
 
 
 if __name__ == "__main__":
