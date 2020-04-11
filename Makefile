@@ -1,5 +1,5 @@
 test:
-	pushd Speck && python -m unittest 
+	python -m unittest
 	
 run:
 	python main.py

@@ -1,6 +1,5 @@
 from unittest import TestCase
-
-from src.Speck import BP_Speck
+from Speck.src.Speck import BP_Speck
 
 
 class TestBPSpeck(TestCase):

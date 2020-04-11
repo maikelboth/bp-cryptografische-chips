@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.Math import BP_Math
+from Speck.src.Math import BP_Math
 
 
 class TestBPMath(TestCase):
