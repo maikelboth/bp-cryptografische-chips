@@ -8,6 +8,15 @@ class BP_Speck:
                       128: {128: 32, 192: 33, 256: 34}}
 
     def __init__(self, key, key_size, block_size, register_pos=0):
+        if not isinstance(key, int):
+            raise TypeError("Key must be an integer")
+        if not isinstance(key_size, int):
+            raise TypeError("Key size must be an integer")
+        if not isinstance(block_size, int):
+            raise TypeError("Block size must be an integer")
+        if not isinstance(register_pos, int):
+            raise TypeError("Register pos must be an integer")
+
         try:
             self.key = key & ((2 ** key_size) - 1)
             self.key_size = key_size

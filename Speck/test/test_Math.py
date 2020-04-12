@@ -28,3 +28,16 @@ class TestBPMath(TestCase):
         self.assertEqual(2, hamming_weight[2])
         self.assertEqual(1, hamming_weight[3])
 
+    def test_incorrect_register_values_raises_type_error(self):
+        self.assertRaises(TypeError, BP_Math, "test", 1)
+        self.assertRaises(TypeError, BP_Math, 1, 1)
+
+    def test_incorrect_block_size_raises_type_error(self):
+        self.assertRaises(TypeError, BP_Math, [1], [1])
+        self.assertRaises(TypeError, BP_Math, [1], "test")
+
+    def test_empty_register_values_raises_value_error(self):
+        self.assertRaises(ValueError, BP_Math, [], 1)
+
+    def test_negative_block_size_raises_value_error(self):
+        self.assertRaises(ValueError, BP_Math, [1], -1)

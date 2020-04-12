@@ -3,6 +3,13 @@ class BP_Math:
     def __init__(self, register_values, block_size):
         if not isinstance(register_values, list):
             raise TypeError("Register values must be an array")
+        if len(register_values) == 0:
+            raise ValueError("Register values is an empty list")
+
+        if not isinstance(block_size, int):
+            raise TypeError("Block size must be an integer")
+        if block_size <= 0:
+            raise ValueError("Block size must be a positive integer")
 
         self.register_values = register_values
         self.block_size = block_size

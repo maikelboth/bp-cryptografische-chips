@@ -30,3 +30,20 @@ class TestBPSpeck(TestCase):
 		self.assertEqual("0xf0e0d0c0b0a09080706050403020100", hex(cipher.key))
 		self.assertEqual("0x6c617669757165207469206564616d20", hex(self.plaintext))
 		self.assertEqual("0xa65d9851797832657860fedf5c570d18", hex(ciphertext))
+
+	def test_incorrect_key_raises_type_error(self):
+		self.assertRaises(TypeError, BP_Speck, "test", 1, 1)
+		self.assertRaises(TypeError, BP_Speck, [1], 1, 1)
+
+	def test_incorrect_key_size_raises_type_error(self):
+		self.assertRaises(TypeError, BP_Speck, 1, "test", 1)
+		self.assertRaises(TypeError, BP_Speck, 1, [1], 1)
+
+	def test_incorrect_block_size_raises_type_error(self):
+		self.assertRaises(TypeError, BP_Speck, 1, 1, "test")
+		self.assertRaises(TypeError, BP_Speck, 1, 1, [1])
+
+	def test_incorrect_register_pos_raises_type_error(self):
+		self.assertRaises(TypeError, BP_Speck, 1, 1, 1, "test")
+		self.assertRaises(TypeError, BP_Speck, 1, 1, 1, [1])
+
