@@ -25,9 +25,8 @@ class BP_Speck:
             self.word_size = block_size >> 1
             self.rounds = self.__valid_setups[block_size][key_size]
         except KeyError:
-            print("Invalid key size and block size combination!")
-        except (ValueError, TypeError):
-            print("Invalid key value!")
+            print("Invalid key size and/or block size!")
+            raise
 
         self.register_values = []
         self.word_mask = (2 ** self.word_size) - 1
