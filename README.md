@@ -14,3 +14,17 @@ Dit is een korte lijst met enkele links naar achtergrond informatie:
 Gebruik `python -m unittest` in een python dir om unit testen uit te voeren. Embedded in de huidig meegeleverde `Makefile` met het commando `make test`.
 
 Gebruik de handige cmdline parser package om aan `main.py` de juiste argumenten mee te geven, om die dan in de `BP_Speck` klasse te gebruiken. Zie main file en Makefile voor meer informatie. 
+
+
+## meeting 15 april
+
+### done
+* Hamming distance is toegevoegd
+* Hamming weight is toegevoegd
+
+### todo
+* functionaliteit om register te preloaden
+  * in eerste instantie is dit met 0x0
+* Welch T-test
+  0. kijken naar python package
+  0. desnoods de statistics package gebruiken
