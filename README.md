@@ -26,5 +26,8 @@ Gebruik de handige cmdline parser package om aan `main.py` de juiste argumenten 
 * functionaliteit om register te preloaden
   * in eerste instantie is dit met 0x0
 * Welch T-test
+
   0. kijken naar python package
   0. desnoods de statistics package gebruiken
+
+* osciloscoop is niet nodig
