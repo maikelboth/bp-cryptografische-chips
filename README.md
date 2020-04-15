@@ -31,3 +31,5 @@ Gebruik de handige cmdline parser package om aan `main.py` de juiste argumenten 
   0. desnoods de statistics package gebruiken
 
 * osciloscoop is niet nodig
+
+* installatie van matplotlib
