@@ -7,7 +7,7 @@ class BP_Speck:
                       96: {96: 28, 144: 29},
                       128: {128: 32, 192: 33, 256: 34}}
 
-    def __init__(self, key, key_size, block_size, register_pos=0):
+    def __init__(self, key, key_size, block_size, register_pos=0, default_register_value=0):
         if not isinstance(key, int):
             raise TypeError("Key must be an integer")
         if not isinstance(key_size, int):
@@ -28,7 +28,8 @@ class BP_Speck:
             print("Invalid key size and/or block size!")
             raise
 
-        self.register_values = []
+        self.default_register_value = default_register_value
+        self.register_values = [self.default_register_value]
         self.word_mask = (2 ** self.word_size) - 1
 
         if self.word_size == 16:
@@ -66,7 +67,7 @@ class BP_Speck:
 
     def encrypt(self, plaintext):
         # Empty earlier register values
-        self.register_values = []
+        self.register_values = [self.default_register_value]
 
         try:
             encrypt_word_1 = (plaintext >> self.word_size) & self.word_mask
