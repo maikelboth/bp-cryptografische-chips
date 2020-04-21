@@ -41,3 +41,12 @@ class TestBPMath(TestCase):
 
     def test_negative_block_size_raises_value_error(self):
         self.assertRaises(ValueError, BP_Math, [1], -1)
+
+    def test_welchs_t_test_returns_correct_value(self):
+        list1 = [27.5, 21.0, 19.0, 23.6, 17.0, 17.9, 16.9, 20.1, 21.9, 22.6, 23.1, 19.6, 19.0, 21.7, 21.4]
+        list2 = [27.1, 22.0, 20.8, 23.4, 23.4, 23.5, 25.8, 22.0, 24.8, 20.2, 21.9, 22.1, 22.9, 20.5, 24.4]
+        correct_t_value = -2.46
+
+        math = BP_Math
+        t_value = math.welchs_t_test(list1, list2)
+        self.assertEqual(correct_t_value, round(t_value, 2))

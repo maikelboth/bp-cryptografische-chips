@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+import statistics
 
 
 class BP_Math:
@@ -63,3 +64,16 @@ class BP_Math:
 
         plt.grid()
         plt.show()
+
+    @staticmethod
+    def welchs_t_test(lst1, lst2):
+        avg1 = statistics.mean(lst1)
+        avg2 = statistics.mean(lst2)
+        std_variance1 = statistics.variance(lst1, avg1)
+        std_variance2 = statistics.variance(lst2, avg2)
+        n1 = len(lst1)
+        n2 = len(lst2)
+
+        t = (avg1 - avg2) / statistics.sqrt(std_variance1/n1 + std_variance2/n2)
+
+        return t
