@@ -45,7 +45,7 @@ class BP_Math:
 
         return hamming_weight
 
-    def get_plot(self):
+    def get_plot_hamming(self):
         x_rounds_hamming_weight = []
         x_rounds_hamming_distance = []
 
@@ -60,6 +60,26 @@ class BP_Math:
 
         plt.xlabel('rounds')
         plt.ylabel('number of bits')
+        plt.legend()
+
+        plt.grid()
+        plt.show()
+
+    def get_plot_t_test(self, list1, list2):
+        x_rounds_list1 = []
+        x_rounds_list2 = []
+
+        for i in range(len(list1)):
+            x_rounds_list1.append(i+2)
+
+        for i in range(len(list2)):
+            x_rounds_list2.append(i+2)
+
+        plt.plot(x_rounds_list1, list1, label='t-test hamming distance')
+        plt.plot(x_rounds_list2, list2, label='t-test hamming weight')
+
+        plt.xlabel('iterations')
+        plt.ylabel('t-value')
         plt.legend()
 
         plt.grid()
