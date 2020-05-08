@@ -34,7 +34,7 @@ class BP_Math:
 
     def get_hamming_weight(self):
         hamming_weight = []
-        for register_value in self.register_values:
+        for register_value in self.register_values[1:]:
             weight = 0
 
             for i in range(self.block_size):
