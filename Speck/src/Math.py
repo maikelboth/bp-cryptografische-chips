@@ -81,8 +81,7 @@ class BP_Math:
         plt.grid()
         plt.show()
 
-    @staticmethod
-    def welchs_t_test(lst1, lst2):
+    def welchs_t_test(self, lst1, lst2):
         avg1 = statistics.mean(lst1)
         avg2 = statistics.mean(lst2)
         std_variance1 = statistics.variance(lst1, avg1)
