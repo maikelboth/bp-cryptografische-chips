@@ -4,7 +4,7 @@ import statistics
 
 class BP_Math:
 
-    def __init__(self, register_values, block_size):
+    def __init__(self, register_values, block_size=128):
         if not isinstance(register_values, list):
             raise TypeError("Register values must be an array")
         if len(register_values) == 0:
@@ -66,15 +66,11 @@ class BP_Math:
         plt.show()
 
     def get_plot_t_test(self, list1, list2):
-        x_rounds_list1 = []
-        x_rounds_list2 = []
+        x_rounds_list1 = [i+2 for i in range(len(list1))]
+        x_rounds_list2 = [i+2 for i in range(len(list2))]
 
-        for i in range(len(list1)):
-            x_rounds_list1.append(i+2)
-
-        for i in range(len(list2)):
-            x_rounds_list2.append(i+2)
-
+        plt.hlines(4.5, 2, len(list1)+2, colors='r')
+        plt.hlines(-4.5, 2, len(list1)+2, colors='r')
         plt.plot(x_rounds_list1, list1, label='t-test hamming distance')
         plt.plot(x_rounds_list2, list2, label='t-test hamming weight')
 
@@ -93,6 +89,9 @@ class BP_Math:
         std_variance2 = statistics.variance(lst2, avg2)
         n1 = len(lst1)
         n2 = len(lst2)
+
+        if std_variance1 == 0 and std_variance2 == 0:
+            return 0
 
         t = (avg1 - avg2) / statistics.sqrt(std_variance1/n1 + std_variance2/n2)
 
