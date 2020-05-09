@@ -5,20 +5,6 @@ from Speck.src.Math import BP_Math
 
 
 def main(options):
-    # cipher = BP_Speck(int(options.key, 0), int(options.keysize), int(options.blocksize))
-    # ciphertext = cipher.encrypt(int(options.plaintext, 0))
-    # print("Using key: " + options.key + " to encrypt plaintext: " + options.plaintext)
-    # print("Ciphertext result: " + hex(ciphertext))
-    #
-    # math = BP_Math(cipher.register_values, int(options.blocksize))
-    # hamming_distance1 = math.get_hamming_distance()
-    # print("Hamming distance : " + str(hamming_distance1))
-    #
-    # hamming_weight1 = math.get_hamming_weight()
-    # print("Hamming weight: " + str(hamming_weight1))
-    #
-    # math.get_plot_hamming()
-
     key = 0x0f0e0d0c0b0a09080706050403020100
     plaintext = 0x6c617669757165207469206564616d20
     register_i = 0
@@ -76,10 +62,6 @@ def main(options):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # parser.add_argument("-k", "--key", help="Cipher key", required=True)
-    # parser.add_argument("-pt", "--plaintext", help="Plaintext to encrypt", required=True)
-    # parser.add_argument("-ks", "--keysize", help="Key size", required=False, default=128)
-    # parser.add_argument("-bs", "--blocksize", help="Block size", required=False, default=128)
     parser.add_argument("-a", "--amount", help="Max amount of iterations", required=True)
     parser.add_argument("-rp", '--register_position', help="Register position", required=False, default=0)
     opts = parser.parse_args()
