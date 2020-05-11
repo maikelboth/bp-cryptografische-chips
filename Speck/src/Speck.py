@@ -56,6 +56,9 @@ class BP_Speck:
             key_2_final = key_2_shift_left ^ key_1_final
             self.key_list_2.append(key_2_final)
 
+    def set_default_register_value(self, value):
+        self.default_register_value = value
+
     def _right_rotate(self, number, amount):
         return ((number << (self.word_size - amount)) + (number >> amount)) & self.word_mask
 

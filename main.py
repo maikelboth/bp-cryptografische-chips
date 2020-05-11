@@ -30,6 +30,8 @@ def main(options):
     hamming_weight_leakage = False
 
     for i in range(int(options.amount) - 1):
+        new_initial_register_value = random.getrandbits(128)
+        cipher.set_default_register_value(new_initial_register_value)
         ciphertext = cipher.encrypt(ciphertext)
         random_math = BP_Math(cipher.register_values, 128)
         random_hamming_distance = random_math.get_hamming_distance()[register_i]
