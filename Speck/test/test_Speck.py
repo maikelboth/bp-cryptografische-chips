@@ -10,17 +10,17 @@ class TestBPSpeck(TestCase):
 		self.plaintext = 0x6c617669757165207469206564616d20
 		self.key = 0x0f0e0d0c0b0a09080706050403020100
 		self.register_pos = 4
-		self.default_register_value = 15
+		self.initial_register_value = 15
 
 	def tearDown(self):
 		pass
 
 	def test_register_values_set_correctly(self):
-		cipher = BP_Speck(self.key, self.key_size, self.block_size, self.register_pos, self.default_register_value)
+		cipher = BP_Speck(self.key, self.key_size, self.block_size, self.register_pos, self.initial_register_value)
 		cipher.encrypt(self.plaintext)
 		values = cipher.get_register_values()
 
-		self.assertEqual(self.default_register_value, values[0])
+		self.assertEqual(self.initial_register_value, values[0])
 		self.assertEqual(3502261146266613382, values[1])
 		self.assertEqual(423162373122964573, values[2])
 		self.assertEqual(11927535118356120913, values[3])

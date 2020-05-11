@@ -7,7 +7,7 @@ class BP_Speck:
                       96: {96: 28, 144: 29},
                       128: {128: 32, 192: 33, 256: 34}}
 
-    def __init__(self, key, key_size, block_size, register_pos=0, default_register_value=0):
+    def __init__(self, key, key_size, block_size, register_pos=0, initial_register_value=0):
         if not isinstance(key, int):
             raise TypeError("Key must be an integer")
         if not isinstance(key_size, int):
@@ -28,8 +28,8 @@ class BP_Speck:
             print("Invalid key size and/or block size!")
             raise
 
-        self.default_register_value = default_register_value
-        self.register_values = [self.default_register_value]
+        self.initial_register_value = initial_register_value
+        self.register_values = [self.initial_register_value]
         self.word_mask = (2 ** self.word_size) - 1
 
         if self.word_size == 16:
@@ -56,8 +56,8 @@ class BP_Speck:
             key_2_final = key_2_shift_left ^ key_1_final
             self.key_list_2.append(key_2_final)
 
-    def set_default_register_value(self, value):
-        self.default_register_value = value
+    def set_initial_register_value(self, value):
+        self.initial_register_value = value
 
     def _right_rotate(self, number, amount):
         return ((number << (self.word_size - amount)) + (number >> amount)) & self.word_mask
@@ -70,7 +70,7 @@ class BP_Speck:
 
     def encrypt(self, plaintext):
         # Empty earlier register values
-        self.register_values = [self.default_register_value]
+        self.register_values = [self.initial_register_value]
 
         try:
             encrypt_word_1 = (plaintext >> self.word_size) & self.word_mask
