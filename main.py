@@ -16,7 +16,7 @@ def main(options):
 
     fixed_math = BP_Math(cipher.register_values, 128)
     fixed_hamming_distance = fixed_math.get_hamming_distance()[register_i]
-    fixed_hamming_weight = fixed_math.get_hamming_weight()[register_i]
+    fixed_hamming_weight = fixed_math.get_hamming_weight()[register_i+1]
 
     fixed_list_hamming_distance = [fixed_hamming_distance]
     fixed_list_hamming_weight = [fixed_hamming_weight]
