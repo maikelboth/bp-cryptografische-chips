@@ -92,6 +92,6 @@ class BP_Math:
         if std_variance1 == 0 and std_variance2 == 0:
             return 0
 
-        t = (avg1 - avg2) / statistics.sqrt(std_variance1/n1 + std_variance2/n2)
+        t = (avg1 - avg2) / statistics.sqrt(std_variance1*std_variance1/n1 + std_variance2*std_variance2/n2)
 
         return t
