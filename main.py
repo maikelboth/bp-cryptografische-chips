@@ -10,7 +10,6 @@ def main(options):
     register_i = 0
     register_pos = int(options.register_position)
 
-
     userandom_init = 1
 
     if userandom_init == 1:
@@ -73,8 +72,8 @@ def main(options):
         t_test_list_hamming_distance.append(t_test_hamming_distance)
         t_test_list_hamming_weight.append(t_test_hamming_weight)
 
-        # showList( "set 1:", fixed_list_hamming_distance )
-        # showList( "set 2:", random_list_hamming_distance )
+        # showList("set 1:", fixed_list_hamming_distance)
+        # showList("set 2:", random_list_hamming_distance)
 
         if abs(t_test_hamming_distance) > 4.5 and not hamming_distance_leakage:
             hamming_distance_leakage = True
@@ -89,7 +88,8 @@ def main(options):
 
     fixed_math.get_plot_t_test(t_test_list_hamming_distance, t_test_list_hamming_weight)
 
-# def showList( title, mylist ):
+
+# def showList(title, mylist):
 #     print(title)
 #     msg = "\t"
 #     for value in mylist:

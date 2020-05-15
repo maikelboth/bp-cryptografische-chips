@@ -83,18 +83,20 @@ class BP_Speck:
 
             encrypt_word_1_shift_right = self._right_rotate(encrypt_word_1, self.shift_right_amount)
             encrypt_word_1_plus_encrypt_word_2 = (encrypt_word_1_shift_right + encrypt_word_2) & self.word_mask
-            encrypt_word_1 = encrypt_word_1_plus_encrypt_word_2 ^ self.key_list_2[i]
+            new_encrypt_word_1 = encrypt_word_1_plus_encrypt_word_2 ^ self.key_list_2[i]
             encrypt_word_2_shift_left = self._left_rotate(encrypt_word_2, self.shift_left_amount)
-            encrypt_word_2 = encrypt_word_2_shift_left ^ encrypt_word_1
+            new_encrypt_word_2 = encrypt_word_2_shift_left ^ new_encrypt_word_1
 
-            registers = {0: encrypt_word_1_shift_right,
-                         1: encrypt_word_1_plus_encrypt_word_2,
-                         2: encrypt_word_1,
-                         3: encrypt_word_2_shift_left,
-                         4: encrypt_word_2}
+            registers = {0: ((encrypt_word_1 << self.word_size) + encrypt_word_2),
+                         1: ((encrypt_word_1_shift_right << self.word_size) + encrypt_word_2),
+                         2: ((encrypt_word_1_plus_encrypt_word_2 << self.word_size) + encrypt_word_2),
+                         3: ((new_encrypt_word_1 << self.word_size) + encrypt_word_2_shift_left),
+                         4: ((new_encrypt_word_1 << self.word_size) + new_encrypt_word_2)}
 
-            #self.register_values.append(registers.get(self.register_pos, 0))
-            self.register_values.append((encrypt_word_1 << self.word_size) + encrypt_word_2)
+            self.register_values.append(registers.get(self.register_pos, 0))
+
+            encrypt_word_1 = new_encrypt_word_1
+            encrypt_word_2 = new_encrypt_word_2
 
         ciphertext = (encrypt_word_1 << self.word_size) + encrypt_word_2
         return ciphertext
