@@ -14,9 +14,9 @@ def main(options):
     userandom_init = 1
 
     if userandom_init == 1:
-      initial_register_value = random.getrandbits(128)
+        initial_register_value = random.getrandbits(128)
     else:
-      initial_register_value = 0
+        initial_register_value = 0
 
     cipher = BP_Speck(key, 128, 128, register_pos, initial_register_value)
     ciphertext = cipher.encrypt(plaintext)
@@ -37,14 +37,13 @@ def main(options):
     hamming_weight_leakage = False
 
     for i in range(int(options.amount) - 1):
-
         if userandom_init == 1:
             new_initial_register_value = random.getrandbits(128)
         else:
             new_initial_register_value = 0
 
         cipher.set_initial_register_value(new_initial_register_value)
-        ciphertext = cipher.encrypt(plaintext)
+        cipher.encrypt(plaintext)
 
         fixed_math = BP_Math(cipher.register_values, 128)
         fixed_hamming_distance = fixed_math.get_hamming_distance()[register_i]
@@ -52,7 +51,6 @@ def main(options):
 
         fixed_list_hamming_distance.append(fixed_hamming_distance)
         fixed_list_hamming_weight.append(fixed_hamming_weight)
-
 
         if userandom_init == 1:
             new_initial_register_value = random.getrandbits(128)
@@ -68,7 +66,6 @@ def main(options):
 
         random_list_hamming_distance.append(random_hamming_distance)
         random_list_hamming_weight.append(random_hamming_weight)
-
 
         t_test_hamming_distance = fixed_math.welchs_t_test(fixed_list_hamming_distance, random_list_hamming_distance)
         t_test_hamming_weight = fixed_math.welchs_t_test(fixed_list_hamming_weight, random_list_hamming_weight)
