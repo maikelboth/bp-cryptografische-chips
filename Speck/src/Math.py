@@ -82,7 +82,8 @@ class BP_Math:
         axes.set_ylim([-10,10])
 
         plt.grid()
-        plt.show()
+        #plt.show()
+        plt.savefig('foo.png')
 
     def welchs_t_test(self, lst1, lst2):
         avg1 = statistics.mean(lst1)

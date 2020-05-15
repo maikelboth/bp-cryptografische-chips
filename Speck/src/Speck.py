@@ -80,6 +80,7 @@ class BP_Speck:
             raise
 
         for i in range(self.rounds):
+
             encrypt_word_1_shift_right = self._right_rotate(encrypt_word_1, self.shift_right_amount)
             encrypt_word_1_plus_encrypt_word_2 = (encrypt_word_1_shift_right + encrypt_word_2) & self.word_mask
             encrypt_word_1 = encrypt_word_1_plus_encrypt_word_2 ^ self.key_list_2[i]
@@ -91,7 +92,9 @@ class BP_Speck:
                          2: encrypt_word_1,
                          3: encrypt_word_2_shift_left,
                          4: encrypt_word_2}
-            self.register_values.append(registers.get(self.register_pos, 0))
+
+            #self.register_values.append(registers.get(self.register_pos, 0))
+            self.register_values.append((encrypt_word_1 << self.word_size) + encrypt_word_2)
 
         ciphertext = (encrypt_word_1 << self.word_size) + encrypt_word_2
         return ciphertext
