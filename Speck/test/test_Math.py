@@ -50,3 +50,10 @@ class TestBPMath(TestCase):
         math = BP_Math(self.register_values)
         t_value = math.welchs_t_test(list1, list2)
         self.assertEqual(correct_t_value, round(t_value, 2))
+
+        list1 = [17.2, 20.9, 22.6, 18.1, 21.7, 21.4, 23.5, 24.2, 14.7, 21.8]
+        list2 = [21.5, 22.8, 21.0, 23.0, 21.6, 23.6, 22.5, 20.7, 23.4, 21.8, 20.7, 21.7, 21.5, 22.5, 23.6, 21.5, 22.5, 23.5, 21.5, 21.8]
+        correct_t_value = -1.57
+
+        t_value = math.welchs_t_test(list1, list2)
+        self.assertEqual(correct_t_value, round(t_value, 2))
